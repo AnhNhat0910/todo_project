@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use \Datetime;
+use Doctrine\Common\Collections\Expr\Value;
 
 class TodoController extends AbstractController 
 {
@@ -25,7 +26,11 @@ class TodoController extends AbstractController
         $list_todo = new Todo();
         $list_todo->setName($_POST['name']);
         $list_todo->setDescription($_POST['des']);
-        $list_todo->setStatus($_POST['status']);
+        if(isset($_POST['status'])) {
+            $list_todo->setStatus($_POST['status']);
+          } else {
+             $list_todo->setStatus(false);
+          }
 
         $date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
          $list_todo->setCreateDate($date);
