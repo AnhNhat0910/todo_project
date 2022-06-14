@@ -74,7 +74,61 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col"></th>
+                <th scope="col">
+                  {# <div class="row"> #}
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                      data-target="#myModal"><i class="fa-solid fa-circle-plus"></i>
+                      Create</button>
+          
+                    <!-- The Modal -->
+                    <div class="modal" id="myModal">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+          
+                          <!-- Modal Header -->
+                          <div class="modal-header">
+                            <h4 class="modal-title">Create Todo List</h4>
+          
+                          </div>
+          
+                          <!-- Modal body -->
+                          <form action="/todo" class="modal-body" method="POST">
+                            <div class="form-group ">
+                              <label for="name" class="font-weight-bold">Name:</label>
+                              <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="des" class="font-weight-bold">Description:</label>
+                              <input type="text" class="form-control" placeholder="Enter Description" id="des" name="des"
+                                required>
+                            </div>
+                            <div class="form-check-inline">
+                              <label class="font-weight-bold">Status:</label>
+                            </div>
+                            <div class="form-check-inline">
+                              <label class="form-check-label">
+                                {# <input type="checkbox" class="form-check-input" name="status" value=1 id="status">Completed #}
+                                <input type="checkbox" class="form-check-input" name="status" id="status"> Completed
+                              </label>
+                            </div>
+                            <br>
+                            {# <div class="form-group">
+                              <label for="create" class="font-weight-bold">CreateDate:</label>
+                              <input type="date" class="form-control" id="create" name="create">
+                            </div> #}
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </form>
+          
+                          <!-- Modal footer -->
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                          </div>
+          
+                        </div>
+                      </div>
+                    </div>
+                  {# </div> #}
+                </th>
                 <th scope="col">ID</th>
                 <th scope="col"><i class="fa-solid fa-spell-check"></i> Name</th>
                 <th scope="col"><i class="fa-solid fa-file-waveform"></i> Description</th>
@@ -110,8 +164,8 @@
                   <a class="btn btn-warning col-sm-6" href="/list/undo/{{item.id}}"><i
                       class="fa-solid fa-circle-xmark"></i> Undo it</a>
                   <button class="btn btn-outline-info"><i class="fa-solid fa-file-pen"></i> Update</button>
-                  
-                  
+
+
                 </td>
                 {% endif %}
 
@@ -123,57 +177,7 @@
             </tbody>
           </table>
         </div>
-        <div class="row">
-          <button type="button" class="btn btn-outline-primary col-sm-3 m-auto" data-toggle="modal"
-            data-target="#myModal"><i class="fa-solid fa-circle-plus"></i>
-            Create</button>
-
-          <!-- The Modal -->
-          <div class="modal" id="myModal">
-            <div class="modal-dialog">
-              <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <h4 class="modal-title">Create Todo List</h4>
-
-                </div>
-
-                <!-- Modal body -->
-                <form action="/todo" class="modal-body" method="POST">
-                  <div class="form-group ">
-                    <label for="name" class="font-weight-bold">Name:</label>
-                    <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="des" class="font-weight-bold">Description:</label>
-                    <input type="text" class="form-control" placeholder="Enter Description" id="des" name="des" required>
-                  </div>
-                  <div class="form-check-inline">
-                     <label  class="font-weight-bold">Status:</label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                      {# <input type="checkbox" class="form-check-input" name="status" value=1 id="status">Completed #}
-                      <input type="checkbox" class="form-check-input" name="status" id="status"> Completed
-                    </label>
-                  </div>
-                  <br>
-                  {# <div class="form-group">
-                    <label for="create" class="font-weight-bold">CreateDate:</label>
-                    <input type="date" class="form-control" id="create" name="create">
-                  </div> #}
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-
-              </div>
-            </div>
-          </div>
+       
       </article>
       {# <aside class="col-3 bg-info"></aside> #}
     </div>
