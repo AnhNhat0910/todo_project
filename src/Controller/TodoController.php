@@ -42,6 +42,54 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
+      /**
+     * @Route("/list/update/{id}")
+     */
+    public function viewUpdate(ManagerRegistry $doctrine, int $id): Response
+    {
+        $repository = $doctrine->getRepository(Todo::class);
+        // look for *all* Product objects
+        $list_todo = $repository->find($id);
+
+        if (!$list_todo) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+
+        // $list_todo->setName('New product name!');
+
+        //$entityManager->flush();
+
+        return $this->render('update.html.twig', ['item' => $list_todo]);
+    }
+
+       /**
+     * @Route("/list/submit/{id}")
+     */
+    public function submitUpdate(ManagerRegistry $doctrine, int $id): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $list_todo = $entityManager->getRepository(Todo::class)->find($id);
+
+        if (!$list_todo) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+
+         $list_todo->setName($_POST['name_update']);
+         $list_todo->setDescription($_POST['des_update']);
+         if(isset($_POST['status_update'])) {
+            $list_todo->setStatus($_POST['status_update']);
+        } else {
+            $list_todo->setStatus(false);
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('home');
+    }
      /**
      * @Route("/list/{id}", name="product_show")
      */
@@ -123,25 +171,5 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-     /**
-     * @Route("/list/update/{id}")
-     */
-    public function update(ManagerRegistry $doctrine, int $id): Response
-    {
-        $entityManager = $doctrine->getManager();
-        $product = $entityManager->getRepository(Product::class)->find($id);
-
-        if (!$product) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
-        }
-
-        $product->setName('New product name!');
-        $entityManager->flush();
-
-        return $this->redirectToRoute('product_show', [
-            'id' => $product->getId()
-        ]);
-    }
+   
 }

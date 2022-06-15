@@ -44,7 +44,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="#"> <i class="fa fa-home"></i> Trang chủ <span
+              <a class="nav-link" href="/home"> <i class="fa fa-home"></i> Trang chủ <span
                   class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -71,43 +71,41 @@
     <div class="row">
       <article class="col-12 bg-light">
         <div class="w-100">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">
-                  {# <div class="row"> #}
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                      data-target="#myModal"><i class="fa-solid fa-circle-plus"></i>
+         {# <div class="row"> #}
+                    <button type="button" class="btn btn-outline-primary mb-3" data-toggle="modal" data-target="#myModal"><i
+                        class="fa-solid fa-circle-plus"></i>
                       Create</button>
-          
+
                     <!-- The Modal -->
                     <div class="modal" id="myModal">
                       <div class="modal-dialog">
                         <div class="modal-content">
-          
+
                           <!-- Modal Header -->
                           <div class="modal-header">
                             <h4 class="modal-title">Create Todo List</h4>
-          
+
                           </div>
-          
+
                           <!-- Modal body -->
                           <form action="/todo" class="modal-body" method="POST">
                             <div class="form-group ">
                               <label for="name" class="font-weight-bold">Name:</label>
-                              <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name" required>
+                              <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name"
+                                required>
                             </div>
                             <div class="form-group">
                               <label for="des" class="font-weight-bold">Description:</label>
-                              <input type="text" class="form-control" placeholder="Enter Description" id="des" name="des"
-                                required>
+                              <input type="text" class="form-control" placeholder="Enter Description" id="des"
+                                name="des" required>
                             </div>
                             <div class="form-check-inline">
                               <label class="font-weight-bold">Status:</label>
                             </div>
                             <div class="form-check-inline">
                               <label class="form-check-label">
-                                {# <input type="checkbox" class="form-check-input" name="status" value=1 id="status">Completed #}
+                                {# <input type="checkbox" class="form-check-input" name="status" value=1
+                                  id="status">Completed #}
                                 <input type="checkbox" class="form-check-input" name="status" id="status"> Completed
                               </label>
                             </div>
@@ -118,17 +116,21 @@
                             </div> #}
                             <button type="submit" class="btn btn-primary">Submit</button>
                           </form>
-          
+
                           <!-- Modal footer -->
                           <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                           </div>
-          
+
                         </div>
                       </div>
                     </div>
-                  {# </div> #}
-                </th>
+                    {#
+                  </div> #}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+               
                 <th scope="col">ID</th>
                 <th scope="col"><i class="fa-solid fa-spell-check"></i> Name</th>
                 <th scope="col"><i class="fa-solid fa-file-waveform"></i> Description</th>
@@ -141,7 +143,7 @@
             <tbody>
               {% for item in list %}
               <tr>
-                <td></td>
+                
                 <th scope="row">{{item.id}} </th>
                 {% if item.status == 1 %}
                 <td style="text-decoration: line-through;"> {{item.name}} </td>
@@ -153,22 +155,19 @@
                 <td>{{item.status ? '<span class="badge badge-success">Completed</span>': '<span
                     class="badge badge-danger">Not Completed</span>'}}</td>
                 <td>{{item.createDate|date('d-m-Y')}}</td>
-                {% if item.status == 0 %}
-                <td><a class="btn btn-success col-sm-6" href="/list/do/{{item.id}}"><i
-                      class="fa-solid fa-circle-check"></i> Do it</a>
-                  <a class="btn btn-outline-info"><i class="fa-solid fa-file-pen"></i> Update</a>
-                </td>
-                {% endif %}
-                {% if item.status == 1 %}
                 <td>
-                  <a class="btn btn-warning col-sm-6" href="/list/undo/{{item.id}}"><i
-                      class="fa-solid fa-circle-xmark"></i> Undo it</a>
-                  <button class="btn btn-outline-info"><i class="fa-solid fa-file-pen"></i> Update</button>
-
-
+                  {% if item.status == 0 %}
+                    <a class="btn btn-success col-sm-6" href="/list/do/{{item.id}}"><i
+                    class="fa-solid fa-circle-check"></i> Do it</a>
+                  {% endif %}
+                  {% if item.status == 1 %}
+                    <a class="btn btn-warning col-sm-6" href="/list/undo/{{item.id}}"><i
+                    class="fa-solid fa-circle-xmark"></i> Undo it</a>
+                  {% endif %}
+                  <!-- UPDATE -->
+                  <a href="/list/update/{{item.id}}" class="btn btn-outline-info"><i class="fa-solid fa-file-pen"></i> Update</a>
+                  
                 </td>
-                {% endif %}
-
                 <td><a class="btn btn-outline-danger" href="/list/delete/{{item.id}}"> <i
                       class="fa-solid fa-trash"></i></a></td>
               </tr>
@@ -177,7 +176,7 @@
             </tbody>
           </table>
         </div>
-       
+
       </article>
       {# <aside class="col-3 bg-info"></aside> #}
     </div>
