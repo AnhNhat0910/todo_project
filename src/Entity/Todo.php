@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Todo
 {
-    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

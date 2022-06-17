@@ -5,31 +5,37 @@ namespace App\Controller;
 use App\Entity\Todo;
 use App\Repository\TodoRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use \Datetime;
-use Doctrine\Common\Collections\Expr\Value;
 
 class TodoController extends AbstractController 
 {
+     /**
+     * @var TodoRepository
+     */
+    private $todoRepository;
 
+    public function __construct(TodoRepository $todoRepository){
+        $this->todoRepository = $todoRepository;
+    }
 
     /**
-     * @Route("/todo", name= "create_todo")
+     * @Route("/todo", name= "createTodo", methods={"POST"})
      */
-    public function createTodo(ManagerRegistry $doctrine): Response
+    public function createTodo(ManagerRegistry $doctrine,Request $request): Response
     {
         $entityManager = $doctrine->getManager();
 
         $list_todo = new Todo();
-        $list_todo->setName($_POST['name']);
-        $list_todo->setDescription($_POST['des']);
-        if(isset($_POST['status'])) {
-            $list_todo->setStatus($_POST['status']);
-          } else {
-             $list_todo->setStatus(false);
+        $list_todo->setName($request->request->get('name'));
+        $list_todo->setDescription($request->request->get('des'));
+        if(null !== $request->request->get('status')) {
+            $list_todo->setStatus(true);
+        } else {
+            $list_todo->setStatus(false);
           }
 
         $date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
@@ -43,106 +49,69 @@ class TodoController extends AbstractController
     }
 
       /**
-     * @Route("/list/update/{id}")
+     * @Route("/list/update/{id}",name="viewUpdateTodo", methods={"GET"})
      */
-    public function viewUpdate(ManagerRegistry $doctrine, int $id): Response
+    public function viewUpdateTodo(int $id): Response
     {
-        $repository = $doctrine->getRepository(Todo::class);
-        // look for *all* Product objects
-        $list_todo = $repository->find($id);
+        $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (!$list_todo) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+        if (isset($list_todo)) {
+            Response : CURLE_HTTP_NOT_FOUND;
         }
-
-        // $list_todo->setName('New product name!');
-
-        //$entityManager->flush();
-
-        return $this->render('update.html.twig', ['item' => $list_todo]);
+        return $this->render('todo/update.html.twig', ['item' => $list_todo]);
     }
 
        /**
-     * @Route("/list/submit/{id}")
+     * @Route("/list/submit/{id}", name="submitUpdateTodo", methods={"POST"})
      */
-    public function submitUpdate(ManagerRegistry $doctrine, int $id): Response
+    public function submitUpdateTodo(ManagerRegistry $doctrine, int $id,Request $request): Response
     {
         $entityManager = $doctrine->getManager();
-        $list_todo = $entityManager->getRepository(Todo::class)->find($id);
+        $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (!$list_todo) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+        if (isset($list_todo)) {
+            Response : CURLE_HTTP_NOT_FOUND;
         }
+         $list_todo->setName($request->request->get('name_update'));
+         $list_todo->setDescription($request->request->get('des_update'));
 
-         $list_todo->setName($_POST['name_update']);
-         $list_todo->setDescription($_POST['des_update']);
-         if(isset($_POST['status_update'])) {
-            $list_todo->setStatus($_POST['status_update']);
+         if(null !== $request->request->get('status_update')) {
+            $list_todo->setStatus($request->request->get('status_update'));
         } else {
             $list_todo->setStatus(false);
         }
 
         $entityManager->flush();
-
         return $this->redirectToRoute('home');
     }
-     /**
-     * @Route("/list/{id}", name="product_show")
-     */
-    public function show(ManagerRegistry $doctrine, int $id): Response
-    {
-        $list_todo = $doctrine->getRepository(Todo::class)->find($id);
-
-        if (!$list_todo) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
-        }
-
-        return new Response('Check out this great product: '.$list_todo->getName());
-
-        // or render a template
-        // in the template, print things with {{ product.name }}
-        // return $this->render('product/show.html.twig', ['product' => $product]);
-    }
 
      /**
-     * @Route("/list/do/{id}")
+     * @Route("/list/do/{id}",name="setCompleted", methods={"GET"})
      */
-    public function do(ManagerRegistry $doctrine, int $id): Response
+    public function setCompleted(ManagerRegistry $doctrine, int $id): Response
     {
-
         $entityManager = $doctrine->getManager();
-        $list_todo = $entityManager->getRepository(Todo::class)->find($id);
+        $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (!$list_todo) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+        if (isset($list_todo)) {
+            Response : CURLE_HTTP_NOT_FOUND;
         }
 
         $list_todo->setStatus(true);
         $entityManager->flush();
-
         return $this->redirectToRoute('home');
     }
 
      /**
-     * @Route("/list/undo/{id}")
+     * @Route("/list/undo/{id}",name="setNotCompleted", methods={"GET"})
      */
-    public function undo(ManagerRegistry $doctrine, int $id): Response
+    public function setNotCompleted(ManagerRegistry $doctrine, int $id): Response
     {
         $entityManager = $doctrine->getManager();
-        $list_todo = $entityManager->getRepository(Todo::class)->find($id);
+        $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (!$list_todo) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+        if (isset($list_todo)) {
+            Response : CURLE_HTTP_NOT_FOUND;
         }
         
         $list_todo->setStatus(false);
@@ -152,17 +121,15 @@ class TodoController extends AbstractController
     }
 
       /**
-     * @Route("/list/delete/{id}")
+     * @Route("/list/delete/{id}",name="deleteTodo", methods={"GET"})
      */
-    public function delete(ManagerRegistry $doctrine, int $id): Response
+    public function deleteTodo(ManagerRegistry $doctrine, int $id): Response
     {
         $entityManager = $doctrine->getManager();
-        $list_todo = $entityManager->getRepository(Todo::class)->find($id);
+        $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (!$list_todo) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+        if (isset($list_todo)) {
+            Response : CURLE_HTTP_NOT_FOUND;
         }
         
         $entityManager->remove($list_todo);
@@ -170,6 +137,4 @@ class TodoController extends AbstractController
 
         return $this->redirectToRoute('home');
     }
-
-   
 }

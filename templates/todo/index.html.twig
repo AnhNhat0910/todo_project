@@ -1,0 +1,101 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Todo Project{% endblock %}
+
+{% block body %}
+<div class="table-data__tool">
+  <div class="table-data__tool-right">
+    <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal" data-target="#myModal">
+      <i class="zmdi zmdi-plus"></i>add item</button>
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Create Todo List</h4>
+          </div>
+          <!-- Modal body -->
+          <form action="/todo" class="modal-body" method="POST">
+            <div class="form-group ">
+              <label for="name" class="font-weight-bold">Name:</label>
+              <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="des" class="font-weight-bold">Description:</label>
+              <input type="text" class="form-control" placeholder="Enter Description" id="des" name="des" required>
+            </div>
+            <div class="form-check-inline">
+              <label class="font-weight-bold">Status:</label>
+            </div>
+            <div class="form-check-inline">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" name="status" id="status"> Completed
+              </label>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="table-responsive table-responsive-data2">
+  <table class="table table-data2">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>description</th>
+        <th>create date</th>
+        <th>status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in list %}
+      <tr class="tr-shadow">
+        {% if item.status == 1 %}
+        <td class="font-weight-bold"> <del>{{item.name}} </del></td>
+        {% endif %}
+        {% if item.status == 0 %}
+        <td class="font-weight-bold"> {{item.name}} </td>
+        {% endif %}
+        <td>{{item.description}} </td>
+        <td>{{item.createDate|date('d-m-Y')}}</td>
+        <td>{{item.status ? '<span class="badge badge-success">Completed</span>': '<span class="badge badge-danger">Not
+            Completed</span>'}}</td>
+        <td>
+          <div class="table-data-feature">
+            {% if item.status == 0 %}
+            <button class="item" data-toggle="tooltip" data-placement="top" title="Do"
+              onclick="location.href='/list/do/{{item.id}}'">
+              <i class="fa-solid fa-check"></i>
+            </button>
+            {% endif %}
+            {% if item.status == 1 %}
+            <button class="item" data-toggle="tooltip" data-placement="top" title="Undo"
+              onclick="location.href='/list/undo/{{item.id}}'">
+              <i class="fa-solid fa-xmark"></i>
+              {% endif %}
+              <button class="item" data-toggle="tooltip" data-placement="top" title="Edit"
+                onclick="location.href='/list/update/{{item.id}}'">
+                <i class="zmdi zmdi-edit"></i>
+              </button>
+              <button class="item" data-toggle="tooltip" data-placement="top" title="Delete"
+                onclick="location.href='/list/delete/{{item.id}}'">
+                <i class="zmdi zmdi-delete"></i>
+              </button>
+          </div>
+        </td>
+      </tr>
+      <tr class="spacer"></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
