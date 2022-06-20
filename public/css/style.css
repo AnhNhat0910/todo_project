@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+.inputBox
+{
+    position: relative;
+    width: 250px;
+    gap: 30px;
+}
+.inputBox input 
+{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background-color: rgb(223, 223, 223);
+    border-radius: 5px;
+    outline: none;
+    color: #fff;
+    font-size: 1em;
+}
+.inputBox span
+{
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    pointer-events: none;
+    font-size: 1em;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+    transition: 0.5s;
+}
+.inputBox input:valid ~ span,
+.inputBox input:focus ~ span
+{
+    color: aqua;
+    transform: translateX(10px) translateY(-7px);
+    font-size: 0.65em;
+    padding: 0 10px;
+    background: rgb(71, 71, 71);
+    border-left: 1px solid aqua;
+    border-right: 1px solid aqua;
+    letter-spacing: 0.2em;
+}
+.inputBox input:valid,
+.inputBox input:focus
+{
+    border: 1px solid aquamarine;
+}

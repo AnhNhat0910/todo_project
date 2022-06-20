@@ -32,11 +32,7 @@ class TodoController extends AbstractController
         $list_todo = new Todo();
         $list_todo->setName($request->request->get('name'));
         $list_todo->setDescription($request->request->get('des'));
-        if(null !== $request->request->get('status')) {
-            $list_todo->setStatus(true);
-        } else {
-            $list_todo->setStatus(false);
-          }
+        $list_todo->setStatus(false);
 
         $date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
          $list_todo->setCreateDate($date);
@@ -74,12 +70,6 @@ class TodoController extends AbstractController
         }
          $list_todo->setName($request->request->get('name_update'));
          $list_todo->setDescription($request->request->get('des_update'));
-
-         if(null !== $request->request->get('status_update')) {
-            $list_todo->setStatus($request->request->get('status_update'));
-        } else {
-            $list_todo->setStatus(false);
-        }
 
         $entityManager->flush();
         return $this->redirectToRoute('home');

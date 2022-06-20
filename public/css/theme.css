@@ -4636,9 +4636,9 @@ section {
     margin-right: 0;
 }
 
-.table-data-feature .item i {
+.table-data-feature  i {
     font-size: 20px;
-    color: #808080;
+    color: #ffffff;
     position: absolute;
     top: 50%;
     left: 50%;
