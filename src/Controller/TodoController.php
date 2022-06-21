@@ -58,18 +58,21 @@ class TodoController extends AbstractController
     }
 
        /**
-     * @Route("/list/submit/{id}", name="submitUpdateTodo", methods={"POST"})
+     * @Route("/list/submit", name="submitUpdateTodo", methods={"POST"})
      */
-    public function submitUpdateTodo(ManagerRegistry $doctrine, int $id,Request $request): Response
+    public function submitUpdateTodo(ManagerRegistry $doctrine,Request $request): Response
     {
         $entityManager = $doctrine->getManager();
-        $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
+        $list_todo = $this->todoRepository->findOneBy(['id' => $request->get('id_update')]);
 
         if (isset($list_todo)) {
             Response : CURLE_HTTP_NOT_FOUND;
         }
-         $list_todo->setName($request->request->get('name_update'));
-         $list_todo->setDescription($request->request->get('des_update'));
+         $list_todo->setName($request->request->get(trim('name_update')));
+         $list_todo->setDescription($request->request->get(trim('des_update')));
+
+        $timeMofify = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
+        $list_todo->setLastModificationTime($timeMofify);
 
         $entityManager->flush();
         return $this->redirectToRoute('home');

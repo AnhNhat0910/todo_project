@@ -38,6 +38,11 @@ class Todo
      */
     private $createDate;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastModificationTime;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Todo
     public function setCreateDate(?\DateTimeInterface $createDate): self
     {
         $this->createDate = $createDate;
+
+        return $this;
+    }
+
+    public function getLastModificationTime(): ?\DateTimeInterface
+    {
+        return $this->lastModificationTime;
+    }
+
+    public function setLastModificationTime(?\DateTimeInterface $lastModificationTime): self
+    {
+        $this->lastModificationTime = $lastModificationTime;
 
         return $this;
     }

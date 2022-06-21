@@ -1,0 +1,25 @@
+.table-sorttable th{
+    cursor: pointer;
+}
+
+.table-sorttable .th-sort-asc::after{
+    content: "\25b4";
+}
+
+.table-sorttable .th-sort-desc::after{
+    content: "\25be";
+}
+
+.th-sort-asc::after,
+.th-sort-desc::after {
+    margin-left: 5px;
+}
+
+.table-sorttable .th-sort-asc,
+.table-sorttable .th-sort-desc {
+    background: rgba(216, 216, 219, 0.554);
+}
+
+.table-sorttable thead {
+    background-color: rgb(244, 244, 244);
+}

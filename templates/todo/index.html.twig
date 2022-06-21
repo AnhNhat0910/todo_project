@@ -24,7 +24,7 @@
 							</div>
 							<div class="form-group">
 								<label for="des" class="font-weight-bold">Description</label>
-								<input type="text" class="form-control" id="des" name="des" required>
+								<textarea maxlength="100" class="form-control" id="des" name="des" required></textarea>
 							</div>
 							<br>
 							<!-- Modal footer -->
@@ -39,32 +39,41 @@
 	</div>
 	</div>
 	<div class="table-responsive table-responsive-data2">
-		<table class="table table-data2">
+		<table class="table table-data2 table-sorttable" id="listTable">
 			<thead>
 				<tr>
-					<th onClick="orderColumn('name','<?php echo $nameNextOrder; ?>')">name</th>
-					<th onClick="orderColumn('description','<?php echo $descriptionNextOrder; ?>')">description</th>
-					<th onClick="orderColumn('createDate','<?php echo $createDateNextOrder; ?>')">creation date</th>
+					<th>name</th>
+					<th>description</th>
+					<th>creation date</th>
+					<th>Last Modification</th>
 					<th>status</th>
-					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for item in list %}
-				<tr class="tr-shadow">
+				<tr class="tr-shadow" id="{{item.id}}">
+					<td data-target="id" hidden>
+						{{item.id}}
+					</td>
 					{% if item.status == 1 %}
-					<td class="font-weight-bold">
+					<td class="font-weight-bold" data-target="name">
 						<del>{{item.name}}</del>
 					</td>
 					{% endif %}
 					{% if item.status == 0 %}
-					<td class="font-weight-bold">
+					<td class="font-weight-bold" data-target="name">
 						{{item.name}}
 					</td>
 					{% endif %}
-					<td>{{item.description}}
+					<td data-target="description" width="450px" style="word-break: break-all;">{{item.description}}
 					</td>
 					<td>{{item.createDate|date('d-m-Y')}}</td>
+					{% if item.lastModificationTime != null %}
+						<td>{{item.lastModificationTime|date('d-m-Y h:i')}}</td>
+					{% endif %}
+					{% if item.lastModificationTime == null %}
+						<td class="font-weight-bold">None</td>
+					{% endif %}
 					<td>{{item.status ? '<span class="badge badge-success">Completed</span>': '<span
 							class="badge badge-danger">Not
 							Completed</span>'}}</td>
@@ -82,19 +91,48 @@
 								<i class="fa-solid fa-xmark"></i>
 							</button>
 							{% endif %}
-							<button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Edit"
-								onclick="location.href='/list/update/{{item.id}}'">
-								<i class="zmdi zmdi-edit"></i>
-							</button>
+							<a class="btn btn-primary mr-1 btn-edit" data-toggle="tooltip" data-placement="top" title="Edit"
+								data-role="update" data-id="{{item.id}}" data-toggle="modal" data-target="#modalUpdate">
+								<i class="zmdi zmdi-edit text-light"></i>
+							</a>
+								<!-- The Modal -->
+								<div class="modal" id="modalUpdate">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<!-- Modal Header -->
+											<div class="modal-header">
+												<h4 class="modal-title">Update Todo Task</h4>
+											</div>
+											<!-- Modal body -->
+											<form action="{{path('submitUpdateTodo')}}" class="modal-body" method="POST">
+												<div class="form-group">
+													<input type="hidden" class="form-control" id="id_update" name="id_update" required>
+												</div>
+												<div class="form-group ">
+													<label for="name_update" class="font-weight-bold">Name</label>
+													<input type="text" class="form-control" id="name_update" name="name_update" required>
+												</div>
+												<div class="form-group">
+													<label for="des_update" class="font-weight-bold">Description</label>
+													<textarea maxlength="100" class="form-control" id="des_update" name="des_update" required></textarea>
+												</div>
+												<br>
+												<!-- Modal footer -->
+												<div class="modal-footer">
+													<button id="closeUpdate" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+													<button type="submit" class="btn btn-primary">Submit</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
 							<a class="btn btn-danger btn-del" href="list/delete/{{item.id}}" data-toggle="tooltip" data-placement="top" title="Delete">
 								<i class="zmdi zmdi-delete"></i>
-								<input id="alertDel" class="ab" type="hidden" value="Task {{item.name}} has been deleted">
 							</a>
 						</div>
 					</td>
 					</td>
 				</tr>
-				<tr class="spacer"></tr>
 				{% endfor %}
 			</tbody>
 		</table>
@@ -132,16 +170,6 @@
 			}
 		})
 	})
-	function orderColumn(column_name,column_order) {
-		$.ajax({
-			url: "order-column.php",
-			data:'orderby='+column_name+'&order='+column_order,
-			type: "POST",
-			success: function(data){	
-				$('#demo-order-list').html(data);
-			}
-		});
-	} 	
 
 	document.getElementById('myModal').onsubmit = function(){
 		Swal.fire({
@@ -151,6 +179,27 @@
         showConfirmButton: false,
         timer: 2000
     });
-	}
+	};
+
+$(document).ready(function(){
+
+	$(document).on('click','a[data-role=update]', function(){
+		var id = $(this).data('id');
+		var name = $('#'+id).children('td[data-target=name]').text().trim();
+		console.log(name);
+		console.log(id);
+		var description = $('#'+id).children('td[data-target=description]').text().trim();
+		console.log(description);
+	 	
+		$('#name_update').val(name);
+		$('#des_update').val(description);
+		$('#id_update').val(id);
+		$('#modalUpdate').toggle();
+	});
+	
+	document.getElementById('closeUpdate').onclick = function(){
+		$('#modalUpdate').hide();
+	};
+});
 </script>
 {% endblock %}
