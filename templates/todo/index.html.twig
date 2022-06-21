@@ -88,7 +88,7 @@
 							{% if item.status == 1 %}
 							<button class="btn btn-warning mr-1" data-toggle="tooltip" data-placement="top" title="Undo"
 								onclick="location.href='/list/undo/{{item.id}}'">
-								<i class="fa-solid fa-xmark"></i>
+								<i class="fa-solid fa-rotate-left text-light"></i>
 							</button>
 							{% endif %}
 							<a class="btn btn-primary mr-1 btn-edit" data-toggle="tooltip" data-placement="top" title="Edit"
@@ -104,7 +104,7 @@
 												<h4 class="modal-title">Update Todo Task</h4>
 											</div>
 											<!-- Modal body -->
-											<form action="{{path('submitUpdateTodo')}}" class="modal-body" method="POST">
+											<form action="{{path('submitUpdateTodo')}}" class="modal-body" method="POST" id="updateForm">
 												<div class="form-group">
 													<input type="hidden" class="form-control" id="id_update" name="id_update" required>
 												</div>
@@ -181,8 +181,6 @@
     });
 	};
 
-$(document).ready(function(){
-
 	$(document).on('click','a[data-role=update]', function(){
 		var id = $(this).data('id');
 		var name = $('#'+id).children('td[data-target=name]').text().trim();
@@ -200,6 +198,14 @@ $(document).ready(function(){
 	document.getElementById('closeUpdate').onclick = function(){
 		$('#modalUpdate').hide();
 	};
-});
+	document.getElementById('updateForm').onsubmit = function(){
+            Swal.fire({
+            position: "top-right",
+            icon: "success",
+            title: "Your task has been updated",
+            showConfirmButton: false,
+            timer: 3000
+        });
+    }
 </script>
 {% endblock %}
