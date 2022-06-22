@@ -32,7 +32,6 @@ class TodoController extends AbstractController
         $list_todo = new Todo();
         $list_todo->setName($request->request->get('name'));
         $list_todo->setDescription($request->request->get('des'));
-        $list_todo->setStatus(false);
 
         $date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
          $list_todo->setCreateDate($date);
@@ -42,19 +41,6 @@ class TodoController extends AbstractController
         // the INSERT query)
         $entityManager->flush();
         return $this->redirectToRoute('home');
-    }
-
-      /**
-     * @Route("/list/update/{id}",name="viewUpdateTodo", methods={"GET"})
-     */
-    public function viewUpdateTodo(int $id): Response
-    {
-        $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
-
-        if (isset($list_todo)) {
-            Response : CURLE_HTTP_NOT_FOUND;
-        }
-        return $this->render('todo/update.html.twig', ['item' => $list_todo]);
     }
 
        /**
@@ -71,6 +57,7 @@ class TodoController extends AbstractController
          $list_todo->setName($request->request->get(trim('name_update')));
          $list_todo->setDescription($request->request->get(trim('des_update')));
 
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $timeMofify = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
         $list_todo->setLastModificationTime($timeMofify);
 
@@ -113,7 +100,7 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-      /**
+    /**
      * @Route("/list/delete/{id}",name="deleteTodo", methods={"GET"})
      */
     public function deleteTodo(ManagerRegistry $doctrine, int $id): Response
@@ -125,7 +112,8 @@ class TodoController extends AbstractController
             Response : CURLE_HTTP_NOT_FOUND;
         }
         
-        $entityManager->remove($list_todo);
+        //$entityManager->remove($list_todo);
+        $list_todo->setIsActive(false);
         $entityManager->flush();
 
         return $this->redirectToRoute('home');

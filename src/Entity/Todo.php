@@ -31,7 +31,7 @@ class Todo
     /**
      * @ORM\Column(type="boolean")
      */
-    private $status;
+    private $status ='0';
 
     /**
      * @ORM\Column(type="date")
@@ -42,6 +42,11 @@ class Todo
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastModificationTime;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive = '1';
 
     public function getId(): ?int
     {
@@ -104,6 +109,18 @@ class Todo
     public function setLastModificationTime(?\DateTimeInterface $lastModificationTime): self
     {
         $this->lastModificationTime = $lastModificationTime;
+
+        return $this;
+    }
+
+    public function isIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

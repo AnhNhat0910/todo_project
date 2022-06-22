@@ -10,22 +10,22 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220621081758 extends AbstractMigration
+final class Version20220622034139 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add field Modification_Time';
+        return 'add field isActive';
     }
 
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE todo ADD last_modification_time DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE todo ADD is_active TINYINT(1) NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE todo DROP last_modification_time');
+        $this->addSql('ALTER TABLE todo DROP is_active');
     }
 }

@@ -1,4 +1,4 @@
-{% extends 'base2.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Todo Project
 {% endblock %}
@@ -8,6 +8,7 @@
 		<div class="table-data__tool-right">
 			<button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal" data-target="#myModal">
 				<i class="zmdi zmdi-plus"></i>add item</button>
+			<a href="/list/deleteRows" class="au-btn au-btn-icon btn-danger au-btn--small"><i class="zmdi zmdi-minus"></i> Delete Rows Selected</a>
 			<!-- The Modal -->
 			<div class="modal" id="myModal">
 				<div class="modal-dialog">
@@ -20,12 +21,13 @@
 						<form action="{{path('createTodo')}}" class="modal-body" method="POST">
 							<div class="form-group ">
 								<label for="name" class="font-weight-bold">Name</label>
-								<input type="text" class="form-control" id="name" name="name" required>
+								<input maxlength="70" type="text" class="form-control" id="name" name="name" required>
 							</div>
 							<div class="form-group">
 								<label for="des" class="font-weight-bold">Description</label>
 								<textarea maxlength="100" class="form-control" id="des" name="des" required></textarea>
 							</div>
+							{# <input type="date" id="date" /> #}
 							<br>
 							<!-- Modal footer -->
 							<div class="modal-footer">
@@ -42,6 +44,7 @@
 		<table class="table table-data2 table-sorttable" id="listTable">
 			<thead>
 				<tr>
+					<th></th>
 					<th>name</th>
 					<th>description</th>
 					<th>creation date</th>
@@ -55,17 +58,18 @@
 					<td data-target="id" hidden>
 						{{item.id}}
 					</td>
+					<td><input type="checkbox" value="{{item.id}}" name='checkList[]'></td>
 					{% if item.status == 1 %}
 					<td class="font-weight-bold" data-target="name">
 						<del>{{item.name}}</del>
 					</td>
 					{% endif %}
 					{% if item.status == 0 %}
-					<td class="font-weight-bold" data-target="name">
+					<td width="200px" style="word-break: break-all;" class="font-weight-bold" data-target="name">
 						{{item.name}}
 					</td>
 					{% endif %}
-					<td data-target="description" width="450px" style="word-break: break-all;">{{item.description}}
+					<td data-target="description" width="400px" style="word-break: break-all;">{{item.description}}
 					</td>
 					<td>{{item.createDate|date('d-m-Y')}}</td>
 					{% if item.lastModificationTime != null %}
@@ -110,7 +114,7 @@
 												</div>
 												<div class="form-group ">
 													<label for="name_update" class="font-weight-bold">Name</label>
-													<input type="text" class="form-control" id="name_update" name="name_update" required>
+													<input maxlength="70" type="text" class="form-control" id="name_update" name="name_update" required>
 												</div>
 												<div class="form-group">
 													<label for="des_update" class="font-weight-bold">Description</label>
@@ -131,7 +135,6 @@
 							</a>
 						</div>
 					</td>
-					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -141,6 +144,7 @@
 
 {% block script %}
 <script>
+	//Alert
 	$('.btn-del').on('click',function(e) {
 		e.preventDefault();
 		const href = $(this).attr('href');
@@ -170,7 +174,7 @@
 			}
 		})
 	})
-
+	//Alert Create Task
 	document.getElementById('myModal').onsubmit = function(){
 		Swal.fire({
         position: "top-right",
@@ -180,7 +184,7 @@
         timer: 2000
     });
 	};
-
+	//Modal for Update form
 	$(document).on('click','a[data-role=update]', function(){
 		var id = $(this).data('id');
 		var name = $('#'+id).children('td[data-target=name]').text().trim();
@@ -194,10 +198,11 @@
 		$('#id_update').val(id);
 		$('#modalUpdate').toggle();
 	});
-	
+	//Close modal Update form
 	document.getElementById('closeUpdate').onclick = function(){
 		$('#modalUpdate').hide();
 	};
+	//Alert for update form
 	document.getElementById('updateForm').onsubmit = function(){
             Swal.fire({
             position: "top-right",
@@ -207,5 +212,21 @@
             timer: 3000
         });
     }
+	// Not allow the day has passed
+	$(function(){
+		var dtToday = new Date();
+		
+		var month = dtToday.getMonth() + 1;
+		var day = dtToday.getDate();
+		var year = dtToday.getFullYear();
+		if(month < 10)
+			month = '0' + month.toString();
+		if(day < 10)
+			day = '0' + day.toString();
+		
+		var minDate= year + '-' + month + '-' + day;
+		
+		$('#date').attr('min', minDate);
+	});
 </script>
 {% endblock %}

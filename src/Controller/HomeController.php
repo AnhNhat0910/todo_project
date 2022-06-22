@@ -15,8 +15,18 @@ class HomeController extends AbstractController {
     public function home(ManagerRegistry $doctrine) : Response {
 
         $repository = $doctrine->getRepository(Todo::class);
-        $list = $repository->findAll();
+        $list = $repository->findBy([
+                'isActive' => true
+        ]);
 
         return $this->render('todo/index.html.twig', ['list' => $list]);
     }
+    /**
+     * @Route("/login", name="login_app", methods={"GET"})
+     */
+    public function index() : Response {
+
+        return $this->render('login/loginForm.html.twig');
+    }
+
 }
