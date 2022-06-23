@@ -15,9 +15,9 @@ class HomeController extends AbstractController {
     public function home(ManagerRegistry $doctrine) : Response {
 
         $repository = $doctrine->getRepository(Todo::class);
-        $list = $repository->findBy([
-                'isActive' => true
-        ]);
+        $list = $repository->findBy(
+                ['isActive' => true]
+        );
 
         return $this->render('todo/index.html.twig', ['list' => $list]);
     }
@@ -28,5 +28,4 @@ class HomeController extends AbstractController {
 
         return $this->render('login/loginForm.html.twig');
     }
-
 }

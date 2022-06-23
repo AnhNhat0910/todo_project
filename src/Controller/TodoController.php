@@ -11,21 +11,22 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use \Datetime;
 
-class TodoController extends AbstractController 
+class TodoController extends AbstractController
 {
-     /**
+    /**
      * @var TodoRepository
      */
     private $todoRepository;
 
-    public function __construct(TodoRepository $todoRepository){
+    public function __construct(TodoRepository $todoRepository)
+    {
         $this->todoRepository = $todoRepository;
     }
 
     /**
      * @Route("/todo", name= "createTodo", methods={"POST"})
      */
-    public function createTodo(ManagerRegistry $doctrine,Request $request): Response
+    public function createTodo(ManagerRegistry $doctrine, Request $request): Response
     {
         $entityManager = $doctrine->getManager();
 
@@ -34,7 +35,7 @@ class TodoController extends AbstractController
         $list_todo->setDescription($request->request->get('des'));
 
         $date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-         $list_todo->setCreateDate($date);
+        $list_todo->setCreateDate($date);
         // tell Doctrine you want to (eventually) save the Todo (no queries yet)
         $entityManager->persist($list_todo);
 
@@ -43,19 +44,20 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-       /**
+    /**
      * @Route("/list/submit", name="submitUpdateTodo", methods={"POST"})
      */
-    public function submitUpdateTodo(ManagerRegistry $doctrine,Request $request): Response
+    public function submitUpdateTodo(ManagerRegistry $doctrine, Request $request): Response
     {
         $entityManager = $doctrine->getManager();
         $list_todo = $this->todoRepository->findOneBy(['id' => $request->get('id_update')]);
 
         if (isset($list_todo)) {
-            Response : CURLE_HTTP_NOT_FOUND;
+            Response:
+            CURLE_HTTP_NOT_FOUND;
         }
-         $list_todo->setName($request->request->get(trim('name_update')));
-         $list_todo->setDescription($request->request->get(trim('des_update')));
+        $list_todo->setName($request->request->get(trim('name_update')));
+        $list_todo->setDescription($request->request->get(trim('des_update')));
 
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $timeMofify = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
@@ -65,7 +67,7 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-     /**
+    /**
      * @Route("/list/do/{id}",name="setCompleted", methods={"GET"})
      */
     public function setCompleted(ManagerRegistry $doctrine, int $id): Response
@@ -74,7 +76,7 @@ class TodoController extends AbstractController
         $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
         if (isset($list_todo)) {
-            Response : CURLE_HTTP_NOT_FOUND;
+            Response :: HTTP_NOT_FOUND;
         }
 
         $list_todo->setStatus(true);
@@ -82,7 +84,7 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-     /**
+    /**
      * @Route("/list/undo/{id}",name="setNotCompleted", methods={"GET"})
      */
     public function setNotCompleted(ManagerRegistry $doctrine, int $id): Response
@@ -91,9 +93,9 @@ class TodoController extends AbstractController
         $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
         if (isset($list_todo)) {
-            Response : CURLE_HTTP_NOT_FOUND;
+            Response :: HTTP_NOT_FOUND;
         }
-        
+
         $list_todo->setStatus(false);
         $entityManager->flush();
 
@@ -108,14 +110,43 @@ class TodoController extends AbstractController
         $entityManager = $doctrine->getManager();
         $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (isset($list_todo)) {
-            Response : CURLE_HTTP_NOT_FOUND;
+        if (!isset($list_todo)) {
+            Response :: HTTP_NOT_FOUND;
         }
-        
+
         //$entityManager->remove($list_todo);
         $list_todo->setIsActive(false);
         $entityManager->flush();
 
         return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/list/delete/rowschecked",name="delRowsChecked", methods={"POST"})
+     */
+    public function delRowsChecked(ManagerRegistry $doctrine, Request $request): Response
+    {
+        $entityManager = $doctrine->getManager();
+        //dump($request->request);
+        //die;
+
+        $list_todo = $this->todoRepository->findBy([
+            'id' => explode(",", $request->request->get('emp_id'))
+        ]);
+        if(!empty($list_todo)){
+            foreach ($list_todo as $item) {
+                $item->setIsActive(false);
+            }
+            $entityManager->flush();
+            return new Response(
+                'success',
+                Response::HTTP_OK
+            );
+        }else{
+            return new Response(
+                'fail',
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 }

@@ -5,15 +5,15 @@
  * @param {boolean} asc 
  */
 
-function sortTableByColumn(table, column, asc = true) {
+ function sortTableByColumn(table, column, asc = true) {
     const dirModifier = asc ? 1 : -1;
     const tBody = table.tBodies[0];
     const rows = Array.from(tBody.querySelectorAll("tr"));
 
     //Sort each row
     const sortedRows = rows.sort((a, b) => {
-        const aColText = a.querySelector(`td:nth-child(${column + 2})`).textContent.trim();
-        const bColText = b.querySelector(`td:nth-child(${column + 2})`).textContent.trim();
+        const aColText = a.querySelector(`td:nth-child(${column + 2})`).textContent.trim().toLowerCase();
+        const bColText = b.querySelector(`td:nth-child(${column + 2})`).textContent.trim().toLowerCase();
         console.log(aColText);
         console.log(bColText);
         return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
@@ -33,7 +33,7 @@ function sortTableByColumn(table, column, asc = true) {
     table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
 }
 
-document.querySelectorAll(".table-sorttable th").forEach(headerCell => {
+document.querySelectorAll(".table-sorttable .th").forEach(headerCell => {
     headerCell.addEventListener("click", () => {
         const tableElement = headerCell.parentElement.parentElement.parentElement;
         const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
@@ -41,4 +41,4 @@ document.querySelectorAll(".table-sorttable th").forEach(headerCell => {
 
         sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
     });
-});
+}); 

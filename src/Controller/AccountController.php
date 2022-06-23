@@ -7,7 +7,6 @@ use App\Repository\AccountRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 
 class AccountController extends AbstractController {
@@ -30,15 +29,15 @@ class AccountController extends AbstractController {
             'password' => $request->request->get('password')
         ]);
         
-        if(isset($user))
-        {
-         $_SESSION['username']=$user->getUsername();
-         echo "success";
+        if(!empty($user)){
+            return new Response(
+                'success'
+            );
         }
-        else
-        {
-         echo "fail";
+        else{
+            return new Response(
+                'not found'
+            );
         }
-        exit();
     }  
 }
