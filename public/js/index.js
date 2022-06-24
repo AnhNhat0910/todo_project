@@ -1,4 +1,4 @@
-    //Alert
+    //Alert delete
 	$('.btn-del').on('click',function(e) {
 		e.preventDefault();
 		const href = $(this).attr('href');
@@ -28,6 +28,16 @@
 			}
 		})
 	})
+	//Alert do task
+	$('.btn-do-task').on('click',function(e) {
+		e.preventDefault();
+		Swal.fire("You ara done!", "Task is complete", "success");
+	})
+	$('.btn-undo-task').on('click',function(e) {
+		e.preventDefault();
+		Swal.fire("Undo task successful!", "Task is not complete", "success");
+	})
+
 	//Alert Create Task
 	document.getElementById('myModal').onsubmit = function(){
 		Swal.fire({
@@ -87,6 +97,10 @@
 	$(document).on('click', '#select_all', function() {          	
 		$(".checkItem").prop("checked", this.checked);
 		$("#select_count").html("Delete "+$("input.checkItem:checked").length+" Rows Selected");
+
+		if($("input.checkItem:checked").length == 0){
+			$("#select_count").html($("input.checkItem:checked").length+" Row Selected ");
+		}
 	});
 
 	//Count row selected
@@ -116,7 +130,7 @@
 		Swal.fire("Please select record!", "No record selected", "info");
 	}
 	else { 	
-		warning_delete = "Are you sure you want to delete "+(employee.length>1?"these":"this")+" row?";  
+		warning_delete = "Are you sure you want to delete "+(employee.length>1? employee.length+" rows?":employee.length+" row?");  
 		var checked = confirm(warning_delete);  
 	
 		if(checked == true) {			

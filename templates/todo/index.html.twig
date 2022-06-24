@@ -41,7 +41,7 @@
 	</div>
 	</div>
 	<div class="table-responsive table-responsive-data2">
-		<table class="table table-data2 table-sorttable" id="listTable">
+		<table class="table table-data2 table-sorttable display" id="listTable">
 			<thead>
 				<tr>
 					<th><input type="checkbox" id="select_all"></th>
@@ -50,14 +50,15 @@
 					<th class="th">creation date</th>
 					<th class="th">Last Modification</th>
 					<th class="th">status</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for item in list %}
 				<tr class="tr-shadow" id="{{item.id}}">
-					<td data-target="id" hidden>
+					{# <td data-target="id" hidden>
 						{{item.id}}
-					</td>
+					</td> #}
 					<td> 
 						<input type="checkbox" value="{{item.id}}" name='checkList[]' class="checkItem" data-checkbox-id="{{item.id}}" >
 					</td>
@@ -67,11 +68,11 @@
 					</td>
 					{% endif %}
 					{% if item.status == 0 %}
-					<td width="200px" style="word-break: break-all;" class="font-weight-bold" data-target="name">
+					<td width="150px" style="word-break: break-all;" class="font-weight-bold" data-target="name">
 						{{item.name}}
 					</td>
 					{% endif %}
-					<td data-target="description" width="350px" style="word-break: break-all;">
+					<td data-target="description" width="250px" style="word-break: break-all;">
 						{{item.description}}
 					</td>
 					<td>{{item.createDate|date('d-m-Y')}}</td>
@@ -87,13 +88,13 @@
 					<td>
 						<div class="table-data-feature">
 							{% if item.status == 0 %}
-							<button class="btn btn-success mr-1" data-toggle="tooltip" data-placement="top" title="Do"
+							<button class="btn btn-success mr-1 btn-do-task" data-toggle="tooltip" data-placement="top" title="Do"
 								onclick="location.href='/list/do/{{item.id}}'">
 								<i class="fa-solid fa-check"></i>
 							</button>
 							{% endif %}
 							{% if item.status == 1 %}
-							<button class="btn btn-warning mr-1" data-toggle="tooltip" data-placement="top" title="Undo"
+							<button class="btn btn-warning mr-1 btn-undo-task" data-toggle="tooltip" data-placement="top" title="Undo"
 								onclick="location.href='/list/undo/{{item.id}}'">
 								<i class="fa-solid fa-rotate-left text-light"></i>
 							</button>

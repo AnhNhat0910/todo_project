@@ -75,13 +75,17 @@ class TodoController extends AbstractController
         $entityManager = $doctrine->getManager();
         $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (isset($list_todo)) {
-            Response :: HTTP_NOT_FOUND;
+        if (!isset($list_todo)) {
+            return new Response(
+                'fail',
+                Response::HTTP_NOT_FOUND
+            );
         }
-
-        $list_todo->setStatus(true);
-        $entityManager->flush();
-        return $this->redirectToRoute('home');
+        else {
+            $list_todo->setStatus(true);
+            $entityManager->flush();  
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**
@@ -114,7 +118,6 @@ class TodoController extends AbstractController
             Response :: HTTP_NOT_FOUND;
         }
 
-        //$entityManager->remove($list_todo);
         $list_todo->setIsActive(false);
         $entityManager->flush();
 
@@ -129,7 +132,6 @@ class TodoController extends AbstractController
         $entityManager = $doctrine->getManager();
         //dump($request->request);
         //die;
-
         $list_todo = $this->todoRepository->findBy([
             'id' => explode(",", $request->request->get('emp_id'))
         ]);
