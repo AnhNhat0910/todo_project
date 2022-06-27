@@ -48,6 +48,11 @@ class Todo
      */
     private $isActive = '1';
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletionTime;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +126,18 @@ class Todo
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getDeletionTime(): ?\DateTimeInterface
+    {
+        return $this->deletionTime;
+    }
+
+    public function setDeletionTime(?\DateTimeInterface $deletionTime): self
+    {
+        $this->deletionTime = $deletionTime;
 
         return $this;
     }

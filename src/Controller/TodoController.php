@@ -118,6 +118,10 @@ class TodoController extends AbstractController
             Response :: HTTP_NOT_FOUND;
         }
 
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $deletionTime = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
+        $list_todo->setDeletionTime($deletionTime);
+
         $list_todo->setIsActive(false);
         $entityManager->flush();
 
@@ -137,6 +141,10 @@ class TodoController extends AbstractController
         ]);
         if(!empty($list_todo)){
             foreach ($list_todo as $item) {
+                date_default_timezone_set('Asia/Ho_Chi_Minh');
+                $deletionTime = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
+                $item->setDeletionTime($deletionTime);
+
                 $item->setIsActive(false);
             }
             $entityManager->flush();

@@ -6,5 +6,8 @@ $(document).ready(function () {
       // "bLengthChange": false,
       "bInfo": false,
       // "bAutoWidth": false
+      "language": {
+         "emptyTable": "No task available",
+       }
    });
 });

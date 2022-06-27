@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Todo App
+{% endblock %}
+
+{% block body %}
+	<div class="table-data__tool">
+		<div class="table-data__tool-right">
+				<button id="btn-restore" class="au-btn au-btn-icon au-btn--green au-btn--small"><i class="fa-solid fa-trash-arrow-up"></i><span class="rows_selected" id="select_count">0 Row Selected</span></button>		
+		</div>
+	</div>
+	<div class="table-responsive table-responsive-data2">
+		<table class="table table-data2 table-sorttable display" id="listTable">
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="select_all"></th>
+					<th class="th">name</th>
+					<th class="th">description</th>
+					<th class="th">Deletion At</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in listDel %}
+				<tr class="tr-shadow" id="{{item.id}}">
+					<td> 
+						<input type="checkbox" value="{{item.id}}" name='checkList[]' class="checkItem" data-checkbox-id="{{item.id}}" >
+					</td>
+					{% if item.status == 1 %}
+					<td class="font-weight-bold">
+						<del>{{item.name}}</del>
+					</td>
+					{% endif %}
+					{% if item.status == 0 %}
+					<td style="word-break: break-all;" class="font-weight-bold" data-target="name">
+						{{item.name}}
+					</td>
+					{% endif %}
+					<td width="250px" style="word-break: break-all;">
+						{{item.description}}
+					</td>
+					{% if item.deletionTime != null %}
+						<td>{{item.deletionTime|date('d-m-Y h:i')}}</td>
+					{% endif %}
+					{% if item.deletionTime == null %}
+						<td class="font-weight-bold">None</td>
+					{% endif %}
+					<td>
+						<a class="btn btn-outline-success btn-restore" href="{{ path('restoreTask', {'id' : item.id}) }}"><i class="fa-solid fa-arrow-turn-up"></i> Restore</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block script %}
+<script src="/js/recycle-bin.js"></script>
+{% endblock %}
