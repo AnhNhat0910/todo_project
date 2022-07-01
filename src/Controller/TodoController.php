@@ -34,8 +34,6 @@ class TodoController extends AbstractController
         $list_todo->setName($request->request->get('name'));
         $list_todo->setDescription($request->request->get('des'));
 
-        $date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-        $list_todo->setCreateDate($date);
         // tell Doctrine you want to (eventually) save the Todo (no queries yet)
         $entityManager->persist($list_todo);
 
@@ -52,19 +50,18 @@ class TodoController extends AbstractController
         $entityManager = $doctrine->getManager();
         $list_todo = $this->todoRepository->findOneBy(['id' => $request->get('id_update')]);
 
-        if (isset($list_todo)) {
-            Response:
-            CURLE_HTTP_NOT_FOUND;
+        if (!isset($list_todo)) {
+            return new Response(
+                'fail',
+                Response::HTTP_NOT_FOUND
+            );
+        }else{
+            $list_todo->setName($request->request->get(trim('name_update')));
+            $list_todo->setDescription($request->request->get(trim('des_update')));
+
+            $entityManager->flush();
+            return $this->redirectToRoute('home');
         }
-        $list_todo->setName($request->request->get(trim('name_update')));
-        $list_todo->setDescription($request->request->get(trim('des_update')));
-
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $timeMofify = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
-        $list_todo->setLastModificationTime($timeMofify);
-
-        $entityManager->flush();
-        return $this->redirectToRoute('home');
     }
 
     /**
@@ -84,6 +81,7 @@ class TodoController extends AbstractController
         else {
             $list_todo->setStatus(true);
             $entityManager->flush();  
+
             return $this->redirectToRoute('home');
         }
     }
@@ -96,14 +94,17 @@ class TodoController extends AbstractController
         $entityManager = $doctrine->getManager();
         $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
-        if (isset($list_todo)) {
-            Response :: HTTP_NOT_FOUND;
+        if (!isset($list_todo)) {
+            return new Response(
+                'fail',
+                Response::HTTP_NOT_FOUND
+            );
+        }else{
+            $list_todo->setStatus(false);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
         }
-
-        $list_todo->setStatus(false);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('home');
     }
 
     /**
@@ -115,17 +116,16 @@ class TodoController extends AbstractController
         $list_todo = $this->todoRepository->findOneBy(['id' => $id]);
 
         if (!isset($list_todo)) {
-            Response :: HTTP_NOT_FOUND;
+            return new Response(
+                'fail',
+                Response::HTTP_NOT_FOUND
+            );
+        }else{
+            $list_todo->setIsActive(false);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
         }
-
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $deletionTime = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
-        $list_todo->setDeletionTime($deletionTime);
-
-        $list_todo->setIsActive(false);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('home');
     }
 
     /**
@@ -141,10 +141,7 @@ class TodoController extends AbstractController
         ]);
         if(!empty($list_todo)){
             foreach ($list_todo as $item) {
-                date_default_timezone_set('Asia/Ho_Chi_Minh');
-                $deletionTime = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
-                $item->setDeletionTime($deletionTime);
-
+                $item->setDeletionTimeValue();
                 $item->setIsActive(false);
             }
             $entityManager->flush();

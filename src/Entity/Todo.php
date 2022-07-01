@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\TodoRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TodoRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 class Todo
 {
     /**
@@ -141,4 +144,32 @@ class Todo
 
         return $this;
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreateDateValue(): void
+    {
+        $date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+        $this->createDate = $date;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateLastModificationTimeValue(): void
+    {
+        $timeMofify = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
+        $this->lastModificationTime = $timeMofify;
+    }
+
+     /**
+     * @ORM\PreRemove
+     */
+    public function setDeletionTimeValue(): void
+    {
+        $deletionTime = DateTime::createFromFormat('Y-m-d h:i', date('Y-m-d h:i'));
+        $this->deletionTime = $deletionTime;
+    }
+
 }

@@ -14,8 +14,6 @@
     const sortedRows = rows.sort((a, b) => {
         const aColText = a.querySelector(`td:nth-child(${column +1 })`).textContent.trim().toLowerCase();
         const bColText = b.querySelector(`td:nth-child(${column +1 })`).textContent.trim().toLowerCase();
-        console.log(aColText);
-        console.log(bColText);
         return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
     });
 
