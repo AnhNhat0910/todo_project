@@ -5623,6 +5623,25 @@ section {
     left: 16px;
 }
 
+.badge-finish{
+    background-color: #d7f5ea;
+    color: #093828;
+    border-radius: 9999px;
+    font-size: .800rem;
+    font-weight: 700;
+    font-family: Lato,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+}
+.badge-not-finish{
+    background-color: #f5d7d7;
+    color: #7b3c3c;
+    border-radius: 9999px;
+    font-size: .800rem;
+    font-weight: 700;
+    font-family: Lato,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+}
+.btn-restore{
+    border-radius: 50px;
+}
 .switch.switch-3d.switch-lg {
     width: 48px;
     height: 28px;
